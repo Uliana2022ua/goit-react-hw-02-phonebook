@@ -1,9 +1,16 @@
-import { Component } from 'react';
-import Filter from 'components/Filter/Filter';
-import ContactsList from '../ContactsList/ContactsList';
-import ContactForm from '../ContactForm/ContactForm';
-import { Container, Title, FormContainer } from './App.styled';
+import React, { Component } from 'react';
 import { nanoid } from 'nanoid';
+import ContactForm from 'components/ContactForm';
+import Filter from 'components/Filter';
+import ContactList from 'components/ContactList';
+import Message from 'components/Message';
+import {
+  Container,
+  Section,
+  SectionsContainer,
+  Title,
+  SectionTitle,
+} from './App.styled';
 
 class App extends Component {
   state = {
@@ -16,19 +23,20 @@ class App extends Component {
     filter: '',
   };
 
-  formSubmitHandler = data => {
-    const oldContact = this.state.contacts.map(oldContact =>
-      oldContact.name.toLowerCase()
-    );
+  addContact = ({ name, number }) => {
+    const contact = { id: nanoid(), name, number };
+    const normalizedName = name.toLowerCase();
 
-    if (oldContact.includes(data.name.toLowerCase())) {
-      return alert(`${data.name} is alredy in contacts`);
+    if (
+      this.state.contacts.find(
+        contact => contact.name.toLowerCase() === normalizedName
+      )
+    ) {
+      return alert(`${name} is already in contacts!`);
     }
 
-    const newContact = { id: nanoid(2), ...data };
-
     this.setState(prevState => ({
-      contacts: [...prevState.contacts, newContact],
+      contacts: [contact, ...prevState.contacts],
     }));
   };
 
@@ -38,11 +46,11 @@ class App extends Component {
     }));
   };
 
-  changeFilter = event => {
+  filterContacts = event => {
     this.setState({ filter: event.currentTarget.value });
   };
 
-  getVisibleContacts = () => {
+  getFilteredContacts = () => {
     const { filter, contacts } = this.state;
     const normalizeFilter = filter.toLowerCase();
 
@@ -52,24 +60,38 @@ class App extends Component {
   };
 
   render() {
-    const visibleContacts = this.getVisibleContacts();
+    const filteredContacts = this.getFilteredContacts();
+    const { addContact, filterContacts, deleteContact, state } = this;
 
     return (
       <Container>
         <Title>PhoneBook</Title>
 
-        <FormContainer>
-          <ContactForm onSubmit={this.formSubmitHandler} />
-        </FormContainer>
+        <SectionsContainer>
+          <Section>
+            <SectionTitle>Add contact</SectionTitle>
+            <ContactForm onSubmit={addContact} />
+          </Section>
 
-        <Title>Contacts</Title>
+          <Section className="contacts">
+            <SectionTitle>Contacts</SectionTitle>
+            {state.contacts.length !== 0 ? (
+              <>
+                <Filter
+                  value={state.filter}
+                  onChange={filterContacts}
+                />
 
-        <Filter value={this.state.filter} onChange={this.changeFilter} />
-
-        <ContactsList
-          visibleContacts={visibleContacts}
-          onDelete={this.deleteContact}
-        />
+                <ContactList
+                  contacts={filteredContacts}
+                  onDeleteButton={deleteContact}
+                />
+              </>
+            ) : (
+              <Message message="There are no contacts in your phonebook. Please add your first contact!" />
+            )}
+          </Section>
+        </SectionsContainer>
       </Container>
     );
   }

@@ -1,53 +1,25 @@
 import styled from '@emotion/styled';
-import { Form, Field } from 'formik';
 
-export const StyledForm = styled(Form)`
+export const ListItem = styled.li`
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
   align-items: center;
-
-  gap: 30px;
-  width: 65%;
-`;
-
-export const StyledLabel = styled.label`
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-  div {
-    padding: 8px;
-    border: ${({ theme }) => {
-      return theme.buttonBorder;
-    }};
-    border-radius: ${({ theme }) => {
-      return theme.inputBorderRadius;
-    }};
-    background-color: #c94c4c;
-    width: 288px;
-    font-size: 14px;
-    &::first-letter {
-      text-transform: uppercase;
-    }
-  }
-`;
-
-export const StyledInput = styled(Field)`
-  width: 300px;
+  width: 400px;
   height: 40px;
+  padding: 5px;
   font-size: 16px;
+  background-color: white;
   border-radius: ${({ theme }) => {
     return theme.inputBorderRadius;
   }};
   border: ${({ theme }) => {
     return theme.buttonBorder;
   }};
-  &::placeholder {
-    font-size: 16px;
-  }
 `;
 
+
 export const StyledButton = styled.button`
-  width: 150px;
+  width: 70px;
   height: 40px;
   transform: scale(1);
   background-color: ${({ theme }) => {
@@ -60,7 +32,7 @@ export const StyledButton = styled.button`
     return theme.buttonBorder;
   }};
 
-  font-size: 16px;
+  font-size: 14px;
   transition: transform 250ms ease-out, background-color 250ms ease-out;
   &:hover,
   &:focus-visible {
